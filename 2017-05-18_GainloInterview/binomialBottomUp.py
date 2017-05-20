@@ -2,6 +2,7 @@ def nChooseR(N, R):
     if N < 0 or R < 0: return 0
     if R > N: return 0
     if N == R or R == 0: return 1
+    if R == 1: return N
 
     # Prep a 2D array of binomial coefficients
     # to contain all less than N - 1 choose R
