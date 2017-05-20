@@ -1,5 +1,5 @@
 def nChooseR(N, R):
-    if N < 1 or R < 1: return 0
+    if N < 0 or R < 0: return 0
     if R > N: return 0
     if N == R or R == 0: return 1
 
@@ -17,6 +17,6 @@ def nChooseR(N, R):
     # recurrence identity
     for n in range(2, N):
         for r in range(2, min(n + 1, R + 1)):
-            coeffs[n][r] = coeffs[n-1][r-1] + coeffs[n-1][r]
+            coeffs[n][r] = coeffs[n - 1][r - 1] + coeffs[n - 1][r]
             
-    return coeffs[N-1][R-1] + coeffs[N-1][R]
+    return coeffs[N - 1][R - 1] + coeffs[N - 1][R]
