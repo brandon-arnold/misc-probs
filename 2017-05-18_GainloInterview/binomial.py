@@ -29,46 +29,40 @@ def chooseNaive(N, R):
     return coeffs[N - 1][R - 1] + coeffs[N - 1][R]
 
 # Time complexity:  O(r * (n - r))
-# Space complexity: O(n - r)
-# Removes waste from chooseNaive().
+# Space complexity: O(r)
+#
+# Removes waste from chooseNaive() by starting from
+#  the first diagonal of Pascal's triangle (all 1's)
+#  and using the recurrence identity to compute each
+#  successive diagonal until the index of NcR is reached
+#
 # One benefit over the O(n) time and O(1) space product
 #  identity approach is that only adder is used (no
 #  division or mult) and the accumulation never
 #  results in a value greater than N choose R.
 def choose(N, R):
-    if N < 0 or R < 0: return 0
-    if R > N: return 0
+    if N < 0 or R < 0 or R > N: return 0
     if N == R or R == 0: return 1
-    if min(R, N - R) == 1: return N
-    R = max(R, N - R) # required
-    
-    # Prep the second column of Pascal's triangle
-    coeffs = range(1, R + 1)
 
-    # Use the recurrence identity to accumulate into
-    # each row, starting from the second column and
-    # stopping when the value containing N choose R
-    # is reached
-    for n in range(1, N - R + 1):
-        for r in range(1, R):
-            coeffs[r] = coeffs[r] + coeffs[r - 1]
-        
-    return coeffs[R - 1]
+    diag = [1] * (R + 1)
+    for _ in xrange(N - R):
+        for i in xrange(R):
+            diag[i + 1] = diag[i] + diag[i + 1]
+    return diag[R]
 
-# Similar approach to above, computing each successive
-# row of the triangle instead of each column. 
-# Same time/space complexity.
-def chooseAlt(N, R):
-    if N < 0 or R < 0: return 0
-    if R > N: return 0
+# Time complexity: O(r)
+# Space complexity: O(1)
+#
+# Computes the diagonal directly using the
+#  product identity
+def choose2(N, R):
+    if N < 0 or R < 0 or R > N: return 0
     if N == R or R == 0: return 1
-    if min(R, N - R): return N
+    R = min(R, N - R)
+    n = N - R
     
-    coeffs = [1] * R
-    for n in range(1, N - R + 1):
-        coeffs[0] = n + 1
-        for r in range(1, R):
-            coeffs[r] = coeffs[r - 1] + coeffs[r]
-
-    return coeffs[R - 1]
- 
+    nCr = 1
+    for i in xrange(1, R + 1):
+        p = nCr * (n + i)
+        nCr = p / i
+    return nCr
